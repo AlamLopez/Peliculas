@@ -11,9 +11,11 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="fa fa-align-justify"></i> USUARIOS
-                        <button type="button" @click="abrirModal('usuario', 'registrar')" class="btn btn-secondary">
-                            <i class="icon-plus"></i>&nbsp;NUEVO
-                        </button>
+                        <template v-if="logueado.idrol == 1">
+                            <button type="button" @click="abrirModal('usuario', 'registrar')" class="btn btn-secondary">
+                                <i class="icon-plus"></i>&nbsp;NUEVO
+                            </button>
+                        </template>
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
@@ -43,21 +45,36 @@
                             </thead>
                             <tbody>
                                 <tr v-for="usuario in arrayUsuario" :key="usuario.id">
-                                    <td style="text-align: center;">
-                                        <button type="button" @click="abrirModal('usuario', 'actualizar', usuario)" class="btn btn-warning btn-sm" title="EDITAR USUARIO">
-                                          <i class="icon-pencil"></i>
-                                        </button> &nbsp;
-                                        <template v-if="usuario.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarUsuario(usuario.id)" title="DESACTIVAR USUARIO">
-                                                <i class="icon-trash"></i>
-                                            </button>
+                                    <template v-if="logueado.idrol == 1">
+                                        <template v-if="usuario.id != logueado.id">
+                                            <td style="text-align: center;">                                        
+                                                <template v-if="usuario.condicion">
+                                                    <button type="button" @click="abrirModal('usuario', 'actualizar', usuario)" class="btn btn-warning btn-sm" title="EDITAR USUARIO">
+                                                        <i class="icon-pencil"></i>
+                                                    </button> &nbsp;
+                                                    <button type="button" class="btn btn-danger btn-sm" @click="desactivarUsuario(usuario.id)" title="DESACTIVAR USUARIO">
+                                                        <i class="icon-trash"></i>
+                                                    </button>
+                                                </template>
+                                                <template v-else>
+                                                    <button type="button" class="btn btn-info btn-sm" @click="activarUsuario(usuario.id)" title="ACTIVAR USUARIO">
+                                                        <i class="icon-check"></i>
+                                                    </button>
+                                                </template>
+                                            </td>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarUsuario(usuario.id)" title="ACTIVAR USUARIO">
-                                                <i class="icon-check"></i>
-                                            </button>
+                                            <td style="text-align: center;">                                        
+                                                    <button type="button" @click="abrirModal('usuario', 'actualizar', usuario)" class="btn btn-warning btn-sm" title="EDITAR USUARIO">
+                                                        <i class="icon-pencil"></i>
+                                                    </button> &nbsp;
+                                                    
+                                            </td>
                                         </template>
-                                    </td>
+                                    </template>
+                                    <template v-else>
+                                        <td style="text-align: center;"></td>
+                                    </template>
                                     <td style="text-align: center;" v-text="usuario.nombrecompleto"></td>
                                     <td style="text-align: center;" v-text="usuario.usuario"></td>
                                     <td style="text-align: center;" v-text="usuario.email"></td>
@@ -187,7 +204,8 @@
                 },
                 offset : 3,
                 criterio : 'usuario',
-                buscar : ''
+                buscar : '',
+                logueado : 0
             }
 
         },
@@ -229,6 +247,7 @@
                 axios.get(url).then(function (response) {
                     var respuesta = response.data;
                     me.arrayUsuario = respuesta.usuarios.data;
+                    me.logueado = respuesta.logueado;
                     me.pagination = respuesta.pagination;
                     console.log(response);
                 })

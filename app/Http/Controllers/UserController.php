@@ -17,6 +17,8 @@ class UserController extends Controller
 
         if(!$request->ajax()) return redirect('/');
 
+        $logueado = Auth::user();
+
         $buscar = $request->buscar;
         $criterio = $request->criterio;
 
@@ -25,7 +27,7 @@ class UserController extends Controller
             $users = User::join('roles', 'roles.id', '=', 'users.idrol')
                         ->select('users.id', 'users.usuario', 'users.nombrecompleto', 'users.email', 'users.password', 'users.condicion', 'users.idrol', 'roles.nombre as rol')
                         ->orderBy('users.id', 'desc')
-                        ->paginate(5);
+                        ->paginate(2);
 
         }else{
 
@@ -33,7 +35,7 @@ class UserController extends Controller
                         ->select('users.id', 'users.usuario', 'users.nombrecompleto', 'users.email', 'users.password', 'users.condicion', 'users.idrol', 'roles.nombre as rol')
                         ->where($criterio, 'like', '%' . $buscar . '%')
                         ->orderBy('users.id', 'desc')
-                        ->paginate(5);
+                        ->paginate(2);
 
         }
 
@@ -48,7 +50,9 @@ class UserController extends Controller
                 'to'            => $users->lastItem(),
             ],
 
-            'usuarios' => $users
+            'usuarios' => $users,
+
+            'logueado' => $logueado
 
         ];
 
@@ -103,7 +107,7 @@ class UserController extends Controller
             $user->usuario = $request->usuario;
             $user->nombrecompleto = $request->nombrecompleto;
             $user->email = $request->email;
-            $user->password = bcrypt($request->password);
+            if($request->password != null) $user->password = bcrypt($request->password);
             $user->condicion = true;
             $user->idrol = $request->idrol;
 

@@ -26,6 +26,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/roles', 'RolController@index');
 Route::get('/roles/selectRol', 'RolController@selectRol');
 
+Route::get('/categorias', 'CategoriaController@index');
+Route::get('/categorias/selectCategoria', 'CategoriaController@selectRol');
+
 Route::get('/usuarios', 'UserController@index');
 Route::get('/usuarios/unico/{usuario}', 'UserController@unico');
 Route::get('/usuarios/unico/{usuario}/{user_id}', 'UserController@unico2');

@@ -1,6 +1,9 @@
 <div class="sidebar">
     <nav class="sidebar-nav">
         <ul class="nav">
+            <li @click="menu=7" class="nav-item">
+                <a class="nav-link active" href="#"><i class="icon-speedometer"></i> Categorias</a>
+            </li>
             <li @click="menu=0" class="nav-item">
                 <a class="nav-link active" href="#"><i class="icon-speedometer"></i> Peliculas</a>
             </li>

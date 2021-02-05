@@ -10,7 +10,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> ROLES
+                        <i class="fa fa-align-justify"></i> CATEGORIAS
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
@@ -20,8 +20,8 @@
                                       <option value="nombre">NOMBRE</option>
                                       <option value="descripcion">DESCRIPCIÓN</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup="listarRol(1, buscar, criterio)" class="form-control" placeholder="TEXTO A BUSCAR">
-                                    <button type="submit" @click="listarRol(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> BUSCAR</button>
+                                    <input type="text" v-model="buscar" @keyup="listarCategoria(1, buscar, criterio)" class="form-control" placeholder="TEXTO A BUSCAR">
+                                    <button type="submit" @click="listarCategoria(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> BUSCAR</button>
                                 </div>
                             </div>
                         </div>
@@ -34,11 +34,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="rol in arrayRol" :key="rol.id">
-                                    <td style="text-align: center;" v-text="rol.nombre"></td>
-                                    <td style="text-align: center;" v-text="rol.descripcion"></td>
+                                <tr v-for="categoria in arrayCategoria" :key="categoria.id">
+                                    <td style="text-align: center;" v-text="categoria.nombre"></td>
+                                    <td style="text-align: center;" v-text="categoria.descripcion"></td>
                                     <td style="text-align: center;">
-                                        <div v-if="rol.condicion">
+                                        <div v-if="categoria.condicion">
                                             <span class="badge badge-success">ACTIVO</span>
                                         </div>
                                         <div v-else>
@@ -69,13 +69,16 @@
 </template>
 
 <script>
+
     export default {
+
         data (){
+            
             return {
-                rol_id: 0,
+                categoria_id: 0,
                 nombre : '',
                 descripcion : '',
-                arrayRol : [],
+                arrayCategoria : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion: 0,
@@ -91,11 +94,15 @@
                 criterio : 'nombre',
                 buscar : ''
             }
+
         },
+
         computed : {
+
             isActived : function(){
                 return this.pagination.current_page;
             },
+
             pagesNumber: function() {
                 if(!this.pagination.to) {
                     return [];
@@ -115,15 +122,19 @@
                 }
                 return pagesArray;
             }
+
         },
+
         methods : {
-            listarRol(page, buscar, criterio){
+
+            listarCategoria(page, buscar, criterio){
+
                 let me = this;
-                var url = '/roles?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+                var url = '/categorias?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
                 
                 axios.get(url).then(function (response) {
                     var respuesta = response.data;
-                    me.arrayRol = respuesta.roles.data;
+                    me.arrayCategoria = respuesta.categorias.data;
                     me.pagination = respuesta.pagination;
                     console.log(response);
                 })
@@ -131,37 +142,51 @@
                     
                     console.log(error);
                 })
+
             },
+
             cambiarPagina(page, buscar, criterio){
                 
                 let me = this;
                 me.pagination.current_page = page;
-                me.listarRol(page, buscar, criterio);
+                me.listarCategoria(page, buscar, criterio);
+
             }
+
         },
+
         mounted() {
-            this.listarRol(1, this.buscar, this.criterio);
+
+            this.listarCategoria(1, this.buscar, this.criterio);
+
         }
+
     }
+
 </script>
 
 <style>
+
     .modal-content{
         width: 100% !important;
         position: fixed !important;
     }
+
     .mostrar{
         display: list-item !important;
         opacity: 1 !important;
         position: absolute !important;
         background-color: #3c29297a !important;
     }
+
     .div-error{
         display: flex;
         justify-content: center;
     }
+
     .text-error{
         color: red !important;
         font-weight: bold;
     }
+    
 </style>
