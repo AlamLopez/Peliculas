@@ -33,9 +33,9 @@
 
         </div>
 
-        @include('plantilla.footer')
-
     </div>
+
+    @include('plantilla.footer')
 
     <!-- Bootstrap and necessary plugins -->
     <script src="js/app.js"></script>
