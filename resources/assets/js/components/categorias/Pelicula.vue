@@ -12,7 +12,7 @@
                     <div class="card-header">
                         <i class="fa fa-align-justify"></i> PELICULA
                         <template v-if="logueado.idrol == 1">
-                            <button type="button" class="btn btn-secondary">
+                            <button type="button" @click="abrirModal('pelicula', 'registrar')" class="btn btn-secondary">
                                 <i class="icon-plus"></i>&nbsp;NUEVO
                             </button>
                         </template>
@@ -72,7 +72,7 @@
                                 <tr v-for="pelicula in arrayPelicula" :key="pelicula.id">
                                     <td style="text-align: center;">  
                                         <template v-if="logueado.idrol==1">
-                                            <button type="button" class="btn btn-warning btn-sm" title="EDITAR PELICULA">
+                                            <button type="button" @click="abrirModal('pelicula', 'actualizar', pelicula)" class="btn btn-warning btn-sm" title="EDITAR PELICULA">
                                                 <i class="icon-pencil"></i>
                                             </button> &nbsp;
                                             <template v-if="pelicula.condicion">
@@ -123,6 +123,77 @@
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
+            <!--Inicio del modal agregar/actualizar-->
+            <div class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-primary modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" v-text="tituloModal"></h4>
+                            <button type="button" @click="cerrarModal()" class="close" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">TITULO (*)</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="titulo" class="form-control" placeholder="TITULO DE PELICULA">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">DIRECTOR (*)</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="director" class="form-control" placeholder="DIRECTOR DE PELICULA">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">DURACION EN MINUTOS (*)</label>
+                                    <div class="col-md-9">
+                                        <input type="number" min="0" v-model="duracion" class="form-control" placeholder="DURACION DE PELICULA">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">ANIO DE ESTRENO (*)</label>
+                                    <div class="col-md-9">
+                                        <input type="number" min="0" v-model="anio_estreno" class="form-control" placeholder="ANIO DE ESTRENO DE PELICULA">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">MULTA DIARIA (*)</label>
+                                    <div class="col-md-9">
+                                        <input type="number" min="0" v-model="multa_diaria" class="form-control" placeholder="MULTA DIARIA DE PELICULA">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="email-input">CATEGORIA (*)</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control" v-model="categoria_id">
+                                            <option value="">SELECCIONE UNA CATEGORIA</option>
+                                            <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div v-show="errorPelicula" class="form-group row div-error">
+                                    <div class="text-center text-error">
+                                        <div v-for="error in errorMostrarMsjPelicula" :key="error" v-text="error">
+
+                                        </div>
+                                    </div>
+                                </div> 
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="cerrarModal()">CERRAR</button>
+                            <button type="button" v-if="tipoAccion==1" @click="registrarPelicula()" class="btn btn-primary">GUARDAR</button>
+                            <button type="button" v-if="tipoAccion==2" @click="actualizarPelicula()" class="btn btn-primary">ACTUALIZAR</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!--Fin del modal-->
         </main>
 </template>
 
@@ -234,7 +305,7 @@
                     },
                     buttonsStyling: false
                 })
-                
+
                 swalWithBootstrapButtons.fire({
                 
                     title: 'ESTÁ SEGURO DE DESACTIVAR A ESTA PELICULA?',
@@ -335,6 +406,155 @@
                 })
 
             },
+
+            registrarPelicula(){
+
+                if(this.validarPelicula()){
+
+                    return;
+                    
+                }
+
+                let me = this;
+
+                axios.post('/peliculas/registrar', {
+                    
+                    'titulo': this.titulo,
+                    'director': this.director,
+                    'duracion': this.duracion,
+                    'anio_estreno': this.anio_estreno,
+                    'multa_diaria': this.multa_diaria,
+                    'idcategoria': this.categoria_id
+                    
+                }).then(function (response) {
+                    
+                    me.cerrarModal();
+                    me.listarPelicula(1, me.buscar, me.criterio, me.select_categoria, me.select_condicion);
+                    Swal.fire({   
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'PELICULA INGRESADA',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+
+            actualizarPelicula(){
+
+                if(this.validarPelicula()){
+
+                    return;
+                    
+                }
+
+                let me = this;
+
+                axios.put('/peliculas/actualizar', {
+
+                    'id': this.pelicula_id,
+                    'titulo': this.titulo,
+                    'director': this.director,
+                    'duracion': this.duracion,
+                    'anio_estreno': this.anio_estreno,
+                    'multa_diaria': this.multa_diaria,
+                    'idcategoria': this.categoria_id
+
+                }).then(function (response) {
+
+                    me.cerrarModal();
+                    me.listarPelicula(1, me.buscar, me.criterio, me.select_categoria, me.select_condicion);
+
+                    Swal.fire({   
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'PELICULA ACTUALIZADO',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                }).catch(function (error) {
+
+                    console.log(error);
+
+                });
+            },
+
+            validarPelicula(){
+                
+                this.errorPelicula = 0;
+                this.errorMostrarMsjPelicula = [];
+                if(!this.titulo) this.errorMostrarMsjPelicula.push("EL TITULO DE LA PELICULA NO PUEDE IR VACÍO.");  
+                if(!this.director) this.errorMostrarMsjPelicula.push("EL DIRECTOR DE LA PELICULA NO PUEDE IR VACÍO.")
+                if(!this.duracion) this.errorMostrarMsjPelicula.push("LA DURACION DE LA PELICULA NO PUEDE IR VACÍO.");
+                if(!this.anio_estreno) this.errorMostrarMsjPelicula.push("EL ANIO DE ESTRENO DE LA PELICULA NO PUEDE IR VACÍO.");
+                if(!this.multa_diaria) this.errorMostrarMsjPelicula.push("LA MULTA DIARIA DE LA PELICULA NO PUEDE IR VACÍO.");
+                if(!this.categoria_id) this.errorMostrarMsjPelicula.push("DEBE SELECCIONAR UNA CATEGORIA PARA LA PELICULA."); 
+                if(this.errorMostrarMsjPelicula.length) this.errorPelicula = 1;
+                return this.errorPelicula;
+            },
+
+            abrirModal(modelo, accion, data = []){
+
+                this.selectCategoria();
+
+                switch (modelo) {
+
+                    case 'pelicula':
+                        {
+                            switch (accion) {
+                                
+                                case 'registrar':
+                                    {
+                                        this.modal = 1;
+                                        this.tituloModal = 'REGISTRAR PELICULA'
+                                        this.titulo = '';
+                                        this.director = '';
+                                        this.duracion = '';
+                                        this.anio_estreno = '';
+                                        this.multa_diaria = '';
+                                        this.categoria_id = '';
+                                        this.tipoAccion = 1;
+                                        break;
+                                    }
+                                case 'actualizar':
+                                    {
+                                         this.modal = 1;
+                                         this.tituloModal = 'ACTUALIZAR PELICULA';
+                                         this.tipoAccion = 2;
+                                         this.pelicula_id = data['id'];
+                                         this.categoria_id = data['idcategoria'];
+                                         this.titulo = data['titulo'];
+                                         this.director = data['director'];
+                                         this.duracion = data['duracion'];
+                                         this.anio_estreno = data['anio_estreno'];
+                                         this.multa_diaria = data['multa_diaria'];
+                                         break;
+                                    }
+                            
+                            }
+                        }
+                        
+                }
+            },
+
+            cerrarModal(){
+
+                this.modal = 0;
+                this.tituloModal = '';
+                this.titulo = '';
+                this.director = '';
+                this.duracion = '';
+                this.duracion = '';
+                this.anio_estreno = '';
+                this.multa_diaria = '';
+                this.errorPelicula = 0;
+                this.errorMostrarMsjPelicula = [];
+
+            }
 
         },
 

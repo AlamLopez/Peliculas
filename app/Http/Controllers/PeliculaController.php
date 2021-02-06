@@ -177,6 +177,63 @@ class PeliculaController extends Controller
 
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        /**
+         * Guardar en la BD del sistema el nuevo registro de usuario
+         */
+
+        if(!$request->ajax()) return redirect('/');
+
+        $pelicula = new Pelicula();
+
+            $pelicula->titulo = $request->titulo;
+            $pelicula->director = $request->director;
+            $pelicula->duracion = $request->duracion;
+            $pelicula->anio_estreno = $request->anio_estreno;
+            $pelicula->multa_diaria = $request->multa_diaria;
+            $pelicula->idcategoria = $request->idcategoria;
+            $pelicula->condicion = true;
+
+        $pelicula->save();
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        /**
+         * Actualizar en la BD del sistema el registro seleccionado
+         */
+
+        if(!$request->ajax()) return redirect('/');
+
+        $pelicula = Pelicula::findOrFail($request->id);
+
+            $pelicula->titulo = $request->titulo;
+            $pelicula->director = $request->director;
+            $pelicula->duracion = $request->duracion;
+            $pelicula->anio_estreno = $request->anio_estreno;
+            $pelicula->multa_diaria = $request->multa_diaria;
+            $pelicula->idcategoria = $request->idcategoria;
+            $pelicula->condicion = true;
+
+        $pelicula->save();
+
+    }
+
     public function selectPelicula(Request $request)
     {
         /**

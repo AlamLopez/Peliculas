@@ -3114,6 +3114,77 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3273,6 +3344,125 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    registrarPelicula: function registrarPelicula() {
+      if (this.validarPelicula()) {
+        return;
+      }
+
+      var me = this;
+      axios.post('/peliculas/registrar', {
+        'titulo': this.titulo,
+        'director': this.director,
+        'duracion': this.duracion,
+        'anio_estreno': this.anio_estreno,
+        'multa_diaria': this.multa_diaria,
+        'idcategoria': this.categoria_id
+      }).then(function (response) {
+        me.cerrarModal();
+        me.listarPelicula(1, me.buscar, me.criterio, me.select_categoria, me.select_condicion);
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'PELICULA INGRESADA',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    actualizarPelicula: function actualizarPelicula() {
+      if (this.validarPelicula()) {
+        return;
+      }
+
+      var me = this;
+      axios.put('/peliculas/actualizar', {
+        'id': this.pelicula_id,
+        'titulo': this.titulo,
+        'director': this.director,
+        'duracion': this.duracion,
+        'anio_estreno': this.anio_estreno,
+        'multa_diaria': this.multa_diaria,
+        'idcategoria': this.categoria_id
+      }).then(function (response) {
+        me.cerrarModal();
+        me.listarPelicula(1, me.buscar, me.criterio, me.select_categoria, me.select_condicion);
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'PELICULA ACTUALIZADO',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    validarPelicula: function validarPelicula() {
+      this.errorPelicula = 0;
+      this.errorMostrarMsjPelicula = [];
+      if (!this.titulo) this.errorMostrarMsjPelicula.push("EL TITULO DE LA PELICULA NO PUEDE IR VACÍO.");
+      if (!this.director) this.errorMostrarMsjPelicula.push("EL DIRECTOR DE LA PELICULA NO PUEDE IR VACÍO.");
+      if (!this.duracion) this.errorMostrarMsjPelicula.push("LA DURACION DE LA PELICULA NO PUEDE IR VACÍO.");
+      if (!this.anio_estreno) this.errorMostrarMsjPelicula.push("EL ANIO DE ESTRENO DE LA PELICULA NO PUEDE IR VACÍO.");
+      if (!this.multa_diaria) this.errorMostrarMsjPelicula.push("LA MULTA DIARIA DE LA PELICULA NO PUEDE IR VACÍO.");
+      if (!this.categoria_id) this.errorMostrarMsjPelicula.push("DEBE SELECCIONAR UNA CATEGORIA PARA LA PELICULA.");
+      if (this.errorMostrarMsjPelicula.length) this.errorPelicula = 1;
+      return this.errorPelicula;
+    },
+    abrirModal: function abrirModal(modelo, accion) {
+      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+      this.selectCategoria();
+
+      switch (modelo) {
+        case 'pelicula':
+          {
+            switch (accion) {
+              case 'registrar':
+                {
+                  this.modal = 1;
+                  this.tituloModal = 'REGISTRAR PELICULA';
+                  this.titulo = '';
+                  this.director = '';
+                  this.duracion = '';
+                  this.anio_estreno = '';
+                  this.multa_diaria = '';
+                  this.categoria_id = '';
+                  this.tipoAccion = 1;
+                  break;
+                }
+
+              case 'actualizar':
+                {
+                  this.modal = 1;
+                  this.tituloModal = 'ACTUALIZAR PELICULA';
+                  this.tipoAccion = 2;
+                  this.pelicula_id = data['id'];
+                  this.categoria_id = data['idcategoria'];
+                  this.titulo = data['titulo'];
+                  this.director = data['director'];
+                  this.duracion = data['duracion'];
+                  this.anio_estreno = data['anio_estreno'];
+                  this.multa_diaria = data['multa_diaria'];
+                  break;
+                }
+            }
+          }
+      }
+    },
+    cerrarModal: function cerrarModal() {
+      this.modal = 0;
+      this.tituloModal = '';
+      this.titulo = '';
+      this.director = '';
+      this.duracion = '';
+      this.duracion = '';
+      this.anio_estreno = '';
+      this.multa_diaria = '';
+      this.errorPelicula = 0;
+      this.errorMostrarMsjPelicula = [];
     }
   },
   mounted: function mounted() {
@@ -7737,7 +7927,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: fixed !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red !important;\n    font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: fixed !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: fixed !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red !important;\n    font-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -7756,7 +7946,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red !important;\n    font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: fixed !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: fixed !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red !important;\n    font-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -7775,7 +7965,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: fixed !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red !important;\n    font-weight: bold;\n}\n\n", ""]);
+exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: fixed !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: fixed !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red !important;\n    font-weight: bold;\n}\n\n", ""]);
 
 // exports
 
@@ -41676,7 +41866,26 @@ var render = function() {
           [
             _c("i", { staticClass: "fa fa-align-justify" }),
             _vm._v(" PELICULA\n                    "),
-            _vm.logueado.idrol == 1 ? [_vm._m(1)] : _vm._e()
+            _vm.logueado.idrol == 1
+              ? [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-secondary",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.abrirModal("pelicula", "registrar")
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "icon-plus" }),
+                      _vm._v(" NUEVO\n                        ")
+                    ]
+                  )
+                ]
+              : _vm._e()
           ],
           2
         ),
@@ -41967,7 +42176,26 @@ var render = function() {
                           [
                             _vm.logueado.idrol == 1
                               ? [
-                                  _vm._m(2, true),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-warning btn-sm",
+                                      attrs: {
+                                        type: "button",
+                                        title: "EDITAR PELICULA"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.abrirModal(
+                                            "pelicula",
+                                            "actualizar",
+                                            pelicula
+                                          )
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "icon-pencil" })]
+                                  ),
                                   _vm._v(
                                     "  \n                                        "
                                   ),
@@ -42180,7 +42408,402 @@ var render = function() {
           2
         )
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        class: { mostrar: _vm.modal },
+        staticStyle: { display: "none" },
+        attrs: {
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "myModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-primary modal-lg",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c("h4", {
+                  staticClass: "modal-title",
+                  domProps: { textContent: _vm._s(_vm.tituloModal) }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "close",
+                    attrs: { type: "button", "aria-label": "Close" },
+                    on: {
+                      click: function($event) {
+                        return _vm.cerrarModal()
+                      }
+                    }
+                  },
+                  [
+                    _c("span", { attrs: { "aria-hidden": "true" } }, [
+                      _vm._v("×")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "form",
+                  {
+                    staticClass: "form-horizontal",
+                    attrs: {
+                      action: "",
+                      method: "post",
+                      enctype: "multipart/form-data"
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("TITULO (*)")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.titulo,
+                              expression: "titulo"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            placeholder: "TITULO DE PELICULA"
+                          },
+                          domProps: { value: _vm.titulo },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.titulo = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("DIRECTOR (*)")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.director,
+                              expression: "director"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            placeholder: "DIRECTOR DE PELICULA"
+                          },
+                          domProps: { value: _vm.director },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.director = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("DURACION EN MINUTOS (*)")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.duracion,
+                              expression: "duracion"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "number",
+                            min: "0",
+                            placeholder: "DURACION DE PELICULA"
+                          },
+                          domProps: { value: _vm.duracion },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.duracion = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("ANIO DE ESTRENO (*)")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.anio_estreno,
+                              expression: "anio_estreno"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "number",
+                            min: "0",
+                            placeholder: "ANIO DE ESTRENO DE PELICULA"
+                          },
+                          domProps: { value: _vm.anio_estreno },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.anio_estreno = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("MULTA DIARIA (*)")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.multa_diaria,
+                              expression: "multa_diaria"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "number",
+                            min: "0",
+                            placeholder: "MULTA DIARIA DE PELICULA"
+                          },
+                          domProps: { value: _vm.multa_diaria },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.multa_diaria = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "email-input" }
+                        },
+                        [_vm._v("CATEGORIA (*)")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.categoria_id,
+                                expression: "categoria_id"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.categoria_id = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              }
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { value: "" } }, [
+                              _vm._v("SELECCIONE UNA CATEGORIA")
+                            ]),
+                            _vm._v(" "),
+                            _vm._l(_vm.arrayCategoria, function(categoria) {
+                              return _c("option", {
+                                key: categoria.id,
+                                domProps: {
+                                  value: categoria.id,
+                                  textContent: _vm._s(categoria.nombre)
+                                }
+                              })
+                            })
+                          ],
+                          2
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.errorPelicula,
+                            expression: "errorPelicula"
+                          }
+                        ],
+                        staticClass: "form-group row div-error"
+                      },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "text-center text-error" },
+                          _vm._l(_vm.errorMostrarMsjPelicula, function(error) {
+                            return _c("div", {
+                              key: error,
+                              domProps: { textContent: _vm._s(error) }
+                            })
+                          }),
+                          0
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.cerrarModal()
+                      }
+                    }
+                  },
+                  [_vm._v("CERRAR")]
+                ),
+                _vm._v(" "),
+                _vm.tipoAccion == 1
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.registrarPelicula()
+                          }
+                        }
+                      },
+                      [_vm._v("GUARDAR")]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.tipoAccion == 2
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.actualizarPelicula()
+                          }
+                        }
+                      },
+                      [_vm._v("ACTUALIZAR")]
+                    )
+                  : _vm._e()
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -42197,32 +42820,6 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("li", { staticClass: "breadcrumb-item active" }, [_vm._v("DASHBOARD")])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      { staticClass: "btn btn-secondary", attrs: { type: "button" } },
-      [
-        _c("i", { staticClass: "icon-plus" }),
-        _vm._v(" NUEVO\n                        ")
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn btn-warning btn-sm",
-        attrs: { type: "button", title: "EDITAR PELICULA" }
-      },
-      [_c("i", { staticClass: "icon-pencil" })]
-    )
   }
 ]
 render._withStripped = true
