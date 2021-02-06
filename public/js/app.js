@@ -3220,7 +3220,7 @@ __webpack_require__.r(__webpack_exports__);
           axios.put('/peliculas/desactivar', {
             'id': id
           }).then(function (response) {
-            me.listarPelicula(1, this.buscar, this.criterio, this.select_categoria, this.select_condicion);
+            me.listarPelicula(1, me.buscar, me.criterio, me.select_categoria, me.select_condicion);
             swalWithBootstrapButtons.fire('DESACTIVADO!', 'LA PELICULA HA SIDO DESACTIVADO.', 'success');
           })["catch"](function (error) {
             console.log(error);
@@ -3253,7 +3253,7 @@ __webpack_require__.r(__webpack_exports__);
           axios.put('/peliculas/activar', {
             'id': id
           }).then(function (response) {
-            me.listarPelicula(1, this.buscar, this.criterio, this.select_categoria, this.select_condicion);
+            me.listarPelicula(1, me.buscar, me.criterio, me.select_categoria, me.select_condicion);
             swalWithBootstrapButtons.fire('ACTIVADO!', 'LA PELICULA HA SIDO ACTIVADO.', 'success');
           })["catch"](function (error) {
             console.log(error);

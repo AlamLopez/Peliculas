@@ -34,25 +34,69 @@ class PeliculaController extends Controller
 
         if($buscar == null && $select_categoria == null && $select_condicion == null){
 
-            $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
+            if($logueado->idrol != 1){
+
+                $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
+                                    ->join('categorias', 'categorias.id', '=', 'peliculas.idcategoria')
+                                    ->where('peliculas.condicion', true)
+                                    ->orderBy('titulo', 'desc')
+                                    ->paginate(10);
+
+            }else{
+
+                $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
                                     ->join('categorias', 'categorias.id', '=', 'peliculas.idcategoria')
                                     ->orderBy('titulo', 'desc')
                                     ->paginate(10);
 
+            }
+
+            
+
         }elseif($buscar != null && $select_categoria == null && $select_condicion == null){
 
-            $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
+            if($logueado->idrol != 1){
+
+                $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
+                                    ->join('categorias', 'categorias.id', '=', 'peliculas.idcategoria')
+                                    ->where('peliculas.condicion', true)
+                                    ->where($criterio, 'like', '%' . $buscar . '%')
+                                    ->orderBy('titulo', 'desc')
+                                    ->paginate(10);
+
+            }else{
+
+                $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
                                     ->join('categorias', 'categorias.id', '=', 'peliculas.idcategoria')
                                     ->where($criterio, 'like', '%' . $buscar . '%')
                                     ->orderBy('titulo', 'desc')
                                     ->paginate(10);
 
+            }
+
+            
+
         }elseif($buscar == null && $select_categoria != null && $select_condicion == null){
-            $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
+
+            if($logueado->idrol != 1){
+
+                $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
+                                    ->join('categorias', 'categorias.id', '=', 'peliculas.idcategoria')
+                                    ->where('peliculas.condicion', true)
+                                    ->where('peliculas.idcategoria', $select_categoria)
+                                    ->orderBy('titulo', 'desc')
+                                    ->paginate(10);
+
+            }else{
+
+                $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
                                     ->join('categorias', 'categorias.id', '=', 'peliculas.idcategoria')
                                     ->where('peliculas.idcategoria', $select_categoria)
                                     ->orderBy('titulo', 'desc')
                                     ->paginate(10);
+
+            }
+            
 
         }elseif($buscar == null && $select_categoria == null && $select_condicion != null){
             $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
@@ -63,12 +107,28 @@ class PeliculaController extends Controller
 
         }elseif($buscar != null && $select_categoria != null && $select_condicion == null){
 
-            $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
+            if($logueado->idrol != 1){
+
+                $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
+                                    ->join('categorias', 'categorias.id', '=', 'peliculas.idcategoria')
+                                    ->where('peliculas.condicion', true)
+                                    ->where('peliculas.idcategoria', $select_categoria)
+                                    ->where($criterio, 'like', '%' . $buscar . '%')
+                                    ->orderBy('titulo', 'desc')
+                                    ->paginate(10);
+
+            }else{
+
+                $peliculas = Pelicula::select('peliculas.*', 'categorias.nombre as categoria')
                                     ->join('categorias', 'categorias.id', '=', 'peliculas.idcategoria')
                                     ->where('peliculas.idcategoria', $select_categoria)
                                     ->where($criterio, 'like', '%' . $buscar . '%')
                                     ->orderBy('titulo', 'desc')
                                     ->paginate(10);
+
+            }
+
+            
 
         }elseif($buscar != null && $select_categoria == null && $select_condicion != null){
 
@@ -97,7 +157,6 @@ class PeliculaController extends Controller
                                     ->orderBy('titulo', 'desc')
                                     ->paginate(10);
         }
-
 
         return [
             
