@@ -31,6 +31,18 @@ Route::get('/roles/selectRol', 'RolController@selectRol');
 Route::get('/categorias', 'CategoriaController@index');
 Route::get('/categorias/selectCategoria', 'CategoriaController@selectCategoria');
 
+Route::get('/usuarios', 'UserController@index');
+Route::get('/usuarios/unico/{usuario}', 'UserController@unico');
+Route::get('/usuarios/unico/{usuario}/{user_id}', 'UserController@unico2');
+Route::get('/usuarios/unicoEmail/{email}', 'UserController@unico3');
+Route::get('/usuarios/unicoEmail/{email}/{user_id}', 'UserController@unico4');
+Route::get('/usuarios/getUser', 'UserController@getUser');
+Route::get('/usuarios/selectUser', 'UserController@selectUser');
+Route::post('/usuarios/registrar', 'UserController@store');
+Route::put('/usuarios/actualizar', 'UserController@update');
+Route::put('/usuarios/desactivar', 'UserController@desactivar');
+Route::put('/usuarios/activar', 'UserController@activar');
+
 Route::get('/peliculas', 'PeliculaController@index');
 Route::get('/peliculas/unico/{pelicula}', 'PeliculaController@unico');
 Route::get('/peliculas/unico/{pelicula}/{pelicula_id}', 'PeliculaController@unico2');
