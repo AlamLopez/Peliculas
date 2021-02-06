@@ -10,7 +10,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> PELICULA
+                        <i class="fa fa-align-justify"></i> PELICULAS
                         <template v-if="logueado.idrol == 1">
                             <button type="button" @click="abrirModal('pelicula', 'registrar')" class="btn btn-secondary">
                                 <i class="icon-plus"></i>&nbsp;NUEVO
@@ -75,17 +75,19 @@
                                             <button type="button" @click="abrirModal('pelicula', 'actualizar', pelicula)" class="btn btn-warning btn-sm" title="EDITAR PELICULA">
                                                 <i class="icon-pencil"></i>
                                             </button> &nbsp;
-                                            <template v-if="pelicula.condicion">
-                                                <button type="button" @click="desactivarPelicula(pelicula.id)" class="btn btn-danger btn-sm" title="DESACTIVAR PELICULA">
-                                                    <i class="icon-trash"></i>
-                                                </button>
-                                            </template>
-                                            <template v-else>
-                                                <button type="button" @click="activarPelicula(pelicula.id)" class="btn btn-info btn-sm" title="ACTIVAR PELICULA">
+                                            <template v-if="pelicula.condicion == false">
+                                                <button type="button" @click="activarPelicula(pelicula.id)" class="btn btn-info btn-sm" title="DEVOLVER PELICULA">
                                                     <i class="icon-check"></i>
                                                 </button>
                                             </template>
-                                        </template>                                      
+                                        </template>
+                                        <template v-else-if="logueado.idrol==3">
+                                            <template v-if="pelicula.condicion">
+                                                <button type="button" @click="desactivarPelicula(pelicula.id)" class="btn btn-danger btn-sm" title="ALQUILAR PELICULA">
+                                                    <i class="icon-trash"></i>
+                                                </button>
+                                            </template>
+                                        </template>                                     
                                     </td>
                                     <td style="text-align: center;" v-text="pelicula.titulo"></td>
                                     <td style="text-align: center;" v-text="pelicula.director"></td>
@@ -353,7 +355,7 @@
 
                 swalWithBootstrapButtons.fire({
                 
-                    title: 'ESTÁ SEGURO DE ACTIVAR A ESTA PELICULA?',
+                    title: 'ESTÁ SEGURO DE ALQUILAR A ESTA PELICULA?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'SÍ, ACTÍVALO!',

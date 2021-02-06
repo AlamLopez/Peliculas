@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Movimiento;
 use Illuminate\Http\Request;
 use App\Pelicula;
 use Auth;
@@ -260,6 +261,15 @@ class PeliculaController extends Controller
 
         $pelicula->save();
 
+        $movimiento = new Movimiento();
+
+            $movimiento->idpelicula = $request->id;
+            $movimiento->iduser = Auth::user()->id;
+            $movimiento->movimiento = 'ALQUILER';
+            $movimiento->fecha = date('Y-m-d');
+
+        $movimiento->save();
+
     }
 
     public function activar(Request $request)
@@ -275,6 +285,17 @@ class PeliculaController extends Controller
             $pelicula->condicion = true;
 
         $pelicula->save();
+
+        $movimiento_anterior = Movimiento::where('idpelicula', $request->id)->orderBy('fecha', 'DESC')->first();
+
+        $movimiento = new Movimiento();
+
+            $movimiento->idpelicula = $request->id;
+            $movimiento->iduser = $movimiento_anterior->iduser;
+            $movimiento->movimiento = 'DEVOLUCION';
+            $movimiento->fecha = date('Y-m-d');
+            
+        $movimiento->save();
 
     }
 

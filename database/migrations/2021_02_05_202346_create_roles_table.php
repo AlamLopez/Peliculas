@@ -17,7 +17,7 @@ class CreateRolesTable extends Migration
 
             $table->bigIncrements('id');
 
-            $table->string('nombre')->unique();
+            $table->string('nombre');
             $table->string('descripcion')->nullable();
             $table->boolean('condicion')->default(true);
             

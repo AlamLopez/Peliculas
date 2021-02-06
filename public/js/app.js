@@ -3185,6 +3185,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3312,7 +3314,7 @@ __webpack_require__.r(__webpack_exports__);
         buttonsStyling: false
       });
       swalWithBootstrapButtons.fire({
-        title: 'ESTÁ SEGURO DE ACTIVAR A ESTA PELICULA?',
+        title: 'ESTÁ SEGURO DE ALQUILAR A ESTA PELICULA?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'SÍ, ACTÍVALO!',
@@ -41865,7 +41867,7 @@ var render = function() {
           { staticClass: "card-header" },
           [
             _c("i", { staticClass: "fa fa-align-justify" }),
-            _vm._v(" PELICULA\n                    "),
+            _vm._v(" PELICULAS\n                    "),
             _vm.logueado.idrol == 1
               ? [
                   _c(
@@ -42199,40 +42201,15 @@ var render = function() {
                                   _vm._v(
                                     "  \n                                        "
                                   ),
-                                  pelicula.condicion
+                                  pelicula.condicion == false
                                     ? [
-                                        _c(
-                                          "button",
-                                          {
-                                            staticClass:
-                                              "btn btn-danger btn-sm",
-                                            attrs: {
-                                              type: "button",
-                                              title: "DESACTIVAR PELICULA"
-                                            },
-                                            on: {
-                                              click: function($event) {
-                                                return _vm.desactivarPelicula(
-                                                  pelicula.id
-                                                )
-                                              }
-                                            }
-                                          },
-                                          [
-                                            _c("i", {
-                                              staticClass: "icon-trash"
-                                            })
-                                          ]
-                                        )
-                                      ]
-                                    : [
                                         _c(
                                           "button",
                                           {
                                             staticClass: "btn btn-info btn-sm",
                                             attrs: {
                                               type: "button",
-                                              title: "ACTIVAR PELICULA"
+                                              title: "DEVOLVER PELICULA"
                                             },
                                             on: {
                                               click: function($event) {
@@ -42249,6 +42226,37 @@ var render = function() {
                                           ]
                                         )
                                       ]
+                                    : _vm._e()
+                                ]
+                              : _vm.logueado.idrol == 3
+                              ? [
+                                  pelicula.condicion
+                                    ? [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass:
+                                              "btn btn-danger btn-sm",
+                                            attrs: {
+                                              type: "button",
+                                              title: "ALQUILAR PELICULA"
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.desactivarPelicula(
+                                                  pelicula.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "icon-trash"
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                    : _vm._e()
                                 ]
                               : _vm._e()
                           ],

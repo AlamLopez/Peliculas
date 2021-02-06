@@ -17,7 +17,7 @@ class CreatePeliculasTable extends Migration
 
             $table->bigIncrements('id');
 
-            $table->string('titulo')->unique();
+            $table->string('titulo');
             $table->string('director')->nullable();
             $table->integer('duracion')->nullable();
             $table->string('anio_estreno')->nullable();
