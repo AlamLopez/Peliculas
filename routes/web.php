@@ -23,6 +23,8 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/movimientos', 'MovimientoController@index');
+
 Route::get('/roles', 'RolController@index');
 Route::get('/roles/selectRol', 'RolController@selectRol');
 

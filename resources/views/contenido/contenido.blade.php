@@ -16,11 +16,10 @@
 
     <template v-if="menu==3">
         <h1>ESTE ES EL TEMPLATE 1 HAHANUEVAMENTE DIGO ES EL 3</h1>
-
     </template>
 
     <template v-if="menu==6">
-        <h1>ESTE ES EL TEMPLATE 1 HAHANUEVAMENTE DIGO ES EL 6</h1>
+        <historial></historial>
     </template>
 
     <template v-if="menu==7">
