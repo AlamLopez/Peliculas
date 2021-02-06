@@ -3085,6 +3085,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3113,7 +3142,9 @@ __webpack_require__.r(__webpack_exports__);
       offset: 3,
       criterio: 'titulo',
       buscar: '',
-      logueado: 0
+      logueado: 0,
+      select_categoria: '',
+      select_condicion: ''
     };
   },
   computed: {
@@ -3148,9 +3179,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    listarPelicula: function listarPelicula(page, buscar, criterio) {
+    listarPelicula: function listarPelicula(page, buscar, criterio, select_categoria, select_condicion) {
       var me = this;
-      var url = '/peliculas?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+      var url = '/peliculas?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio + '&select_categoria=' + select_categoria + '&select_condicion=' + select_condicion;
       axios.get(url).then(function (response) {
         var respuesta = response.data;
         me.arrayPelicula = respuesta.peliculas.data;
@@ -3161,14 +3192,92 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+    cambiarPagina: function cambiarPagina(page, buscar, criterio, select_categoria, select_condicion) {
       var me = this;
       me.pagination.current_page = page;
-      me.listarPelicula(page, buscar, criterio);
+      me.listarPelicula(page, buscar, criterio, select_categoria, select_condicion);
+    },
+    desactivarPelicula: function desactivarPelicula(id) {
+      var _this = this;
+
+      var swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      });
+      swalWithBootstrapButtons.fire({
+        title: 'ESTÁ SEGURO DE DESACTIVAR A ESTA PELICULA?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'SÍ, DESACTÍVALA!',
+        cancelButtonText: 'NO, CANCELAR!',
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.value) {
+          var me = _this;
+          axios.put('/peliculas/desactivar', {
+            'id': id
+          }).then(function (response) {
+            me.listarPelicula(1, this.buscar, this.criterio, this.select_categoria, this.select_condicion);
+            swalWithBootstrapButtons.fire('DESACTIVADO!', 'LA PELICULA HA SIDO DESACTIVADO.', 'success');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel) {}
+      });
+    },
+    activarPelicula: function activarPelicula(id) {
+      var _this2 = this;
+
+      var swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      });
+      swalWithBootstrapButtons.fire({
+        title: 'ESTÁ SEGURO DE ACTIVAR A ESTA PELICULA?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'SÍ, ACTÍVALO!',
+        cancelButtonText: 'NO, CANCELAR!',
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.value) {
+          var me = _this2;
+          axios.put('/peliculas/activar', {
+            'id': id
+          }).then(function (response) {
+            me.listarPelicula(1, this.buscar, this.criterio, this.select_categoria, this.select_condicion);
+            swalWithBootstrapButtons.fire('ACTIVADO!', 'LA PELICULA HA SIDO ACTIVADO.', 'success');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel) {}
+      });
+    },
+    selectCategoria: function selectCategoria() {
+      var me = this;
+      var url = '/categorias/selectCategoria';
+      axios.get(url).then(function (response) {
+        var respuesta = response.data;
+        me.arrayCategoria = respuesta.categorias;
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   },
   mounted: function mounted() {
-    this.listarPelicula(1, this.buscar, this.criterio);
+    this.listarPelicula(1, this.buscar, this.criterio, this.select_categoria, this.select_condicion);
+    this.selectCategoria();
   }
 });
 
@@ -41572,241 +41681,504 @@ var render = function() {
           2
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _c("div", { staticClass: "form-group row" }, [
-            _c("div", { staticClass: "col-md-6" }, [
-              _c("div", { staticClass: "input-group" }, [
-                _c(
-                  "select",
-                  {
+        _c(
+          "div",
+          { staticClass: "card-body" },
+          [
+            _c("div", { staticClass: "form-group row" }, [
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("div", { staticClass: "input-group" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.criterio,
+                          expression: "criterio"
+                        }
+                      ],
+                      staticClass: "form-control col-md-3",
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.criterio = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "titulo" } }, [
+                        _vm._v("TITULO")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "director" } }, [
+                        _vm._v("DIRECTOR")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "anio_estreno" } }, [
+                        _vm._v("ANIO ESTRENO")
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.criterio,
-                        expression: "criterio"
+                        value: _vm.buscar,
+                        expression: "buscar"
                       }
                     ],
-                    staticClass: "form-control col-md-3",
+                    staticClass: "form-control",
+                    attrs: { type: "text", placeholder: "TEXTO A BUSCAR" },
+                    domProps: { value: _vm.buscar },
                     on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.criterio = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
+                      keyup: function($event) {
+                        return _vm.listarPelicula(
+                          1,
+                          _vm.buscar,
+                          _vm.criterio,
+                          _vm.select_categoria,
+                          _vm.select_condicion
+                        )
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.buscar = $event.target.value
                       }
                     }
-                  },
-                  [
-                    _c("option", { attrs: { value: "titulo" } }, [
-                      _vm._v("TITULO")
-                    ]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "director" } }, [
-                      _vm._v("DIRECTOR")
-                    ]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "anio_estreno" } }, [
-                      _vm._v("ANIO ESTRENO")
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.buscar,
-                      expression: "buscar"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text", placeholder: "TEXTO A BUSCAR" },
-                  domProps: { value: _vm.buscar },
-                  on: {
-                    keyup: function($event) {
-                      return _vm.listarPelicula(1, _vm.buscar, _vm.criterio)
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.buscar = $event.target.value
-                    }
-                  }
-                })
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "table",
-            { staticClass: "table table-bordered table-striped table-sm" },
-            [
-              _vm._m(2),
+                  })
+                ])
+              ]),
               _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(_vm.arrayPelicula, function(pelicula) {
-                  return _c("tr", { key: pelicula.id }, [
-                    _c(
-                      "td",
-                      { staticStyle: { "text-align": "center" } },
-                      [
-                        pelicula.condicion
-                          ? [
-                              _vm._m(3, true),
-                              _vm._v(
-                                "  \n                                        "
-                              ),
-                              _vm._m(4, true)
-                            ]
-                          : [_vm._m(5, true)]
-                      ],
-                      2
-                    ),
-                    _vm._v(" "),
-                    _c("td", {
-                      staticStyle: { "text-align": "center" },
-                      domProps: { textContent: _vm._s(pelicula.titulo) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      staticStyle: { "text-align": "center" },
-                      domProps: { textContent: _vm._s(pelicula.director) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      staticStyle: { "text-align": "center" },
-                      domProps: { textContent: _vm._s(pelicula.duracion) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      staticStyle: { "text-align": "center" },
-                      domProps: { textContent: _vm._s(pelicula.anio_estreno) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      staticStyle: { "text-align": "center" },
-                      domProps: { textContent: _vm._s(pelicula.categoria) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      staticStyle: { "text-align": "center" },
-                      domProps: { textContent: _vm._s(pelicula.multa_diaria) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", { staticStyle: { "text-align": "center" } }, [
-                      pelicula.condicion
-                        ? _c("div", [
-                            _c("span", { staticClass: "badge badge-success" }, [
-                              _vm._v("DISPONIBLE")
-                            ])
-                          ])
-                        : _c("div", [
-                            _c("span", { staticClass: "badge badge-danger" }, [
-                              _vm._v("NO DISPONIBLE")
-                            ])
-                          ])
-                    ])
-                  ])
-                }),
-                0
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("nav", [
-            _c(
-              "ul",
-              { staticClass: "pagination" },
-              [
-                _vm.pagination.current_page > 1
-                  ? _c("li", { staticClass: "page-item" }, [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "page-link",
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.cambiarPagina(
-                                _vm.pagination.current_page - 1,
-                                _vm.buscar,
-                                _vm.criterio
-                              )
-                            }
-                          }
-                        },
-                        [_vm._v("Ant")]
-                      )
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm._l(_vm.pagesNumber, function(page) {
-                  return _c(
-                    "li",
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("div", { staticClass: "input-group input-daterange" }, [
+                  _c("div", { staticClass: "input-group-addon bg-primary" }, [
+                    _vm._v("CATEGORIA")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
                     {
-                      key: page,
-                      staticClass: "page-item",
-                      class: [page == _vm.isActived ? "active" : ""]
-                    },
-                    [
-                      _c("a", {
-                        staticClass: "page-link",
-                        attrs: { href: "#" },
-                        domProps: { textContent: _vm._s(page) },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.cambiarPagina(
-                              page,
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.select_categoria,
+                          expression: "select_categoria"
+                        }
+                      ],
+                      staticClass: "form-control col-md-8",
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.select_categoria = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                          function($event) {
+                            return _vm.listarPelicula(
+                              1,
                               _vm.buscar,
-                              _vm.criterio
+                              _vm.criterio,
+                              _vm.select_categoria,
+                              _vm.select_condicion
                             )
                           }
-                        }
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [_vm._v("TODOS")]),
+                      _vm._v(" "),
+                      _vm._l(_vm.arrayCategoria, function(nombreCategoria) {
+                        return _c("option", {
+                          key: nombreCategoria.id,
+                          domProps: {
+                            value: nombreCategoria.id,
+                            textContent: _vm._s(nombreCategoria.nombre)
+                          }
+                        })
                       })
-                    ]
+                    ],
+                    2
                   )
-                }),
-                _vm._v(" "),
-                _vm.pagination.current_page < _vm.pagination.last_page
-                  ? _c("li", { staticClass: "page-item" }, [
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _vm.logueado.idrol == 1
+              ? [
+                  _c("div", { staticClass: "form-group row" }, [
+                    _c("div", { staticClass: "col-md-6" }, [
                       _c(
-                        "a",
-                        {
+                        "div",
+                        { staticClass: "input-group input-daterange" },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "input-group-addon bg-primary" },
+                            [_vm._v("CONDICION")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.select_condicion,
+                                  expression: "select_condicion"
+                                }
+                              ],
+                              staticClass: "form-control col-md-8",
+                              on: {
+                                change: [
+                                  function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.select_condicion = $event.target
+                                      .multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  },
+                                  function($event) {
+                                    return _vm.listarPelicula(
+                                      1,
+                                      _vm.buscar,
+                                      _vm.criterio,
+                                      _vm.select_categoria,
+                                      _vm.select_condicion
+                                    )
+                                  }
+                                ]
+                              }
+                            },
+                            [
+                              _c("option", { attrs: { value: "" } }, [
+                                _vm._v("TODOS")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "1" } }, [
+                                _vm._v("DISPONIBILIDAD")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "0" } }, [
+                                _vm._v("INDISPONIBILIDAD")
+                              ])
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  ])
+                ]
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "table",
+              { staticClass: "table table-bordered table-striped table-sm" },
+              [
+                _c("thead", [
+                  _c(
+                    "tr",
+                    [
+                      _c("th", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("OPCIONES")
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("TITULO")
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("DIRECTOR")
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("DURACION")
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("ANIO ESTRENO")
+                      ]),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("CATEGORIA")
+                      ]),
+                      _vm._v(" "),
+                      _vm.logueado.idrol == 1
+                        ? [
+                            _c(
+                              "th",
+                              { staticStyle: { "text-align": "center" } },
+                              [_vm._v("MULTA DIARIA")]
+                            )
+                          ]
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c("th", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("ESTADO")
+                      ])
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.arrayPelicula, function(pelicula) {
+                    return _c(
+                      "tr",
+                      { key: pelicula.id },
+                      [
+                        _c(
+                          "td",
+                          { staticStyle: { "text-align": "center" } },
+                          [
+                            _vm.logueado.idrol == 1
+                              ? [
+                                  _vm._m(2, true),
+                                  _vm._v(
+                                    "  \n                                        "
+                                  ),
+                                  pelicula.condicion
+                                    ? [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass:
+                                              "btn btn-danger btn-sm",
+                                            attrs: {
+                                              type: "button",
+                                              title: "DESACTIVAR PELICULA"
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.desactivarPelicula(
+                                                  pelicula.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "icon-trash"
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                    : [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass: "btn btn-info btn-sm",
+                                            attrs: {
+                                              type: "button",
+                                              title: "ACTIVAR PELICULA"
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.activarPelicula(
+                                                  pelicula.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "icon-check"
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                ]
+                              : _vm._e()
+                          ],
+                          2
+                        ),
+                        _vm._v(" "),
+                        _c("td", {
+                          staticStyle: { "text-align": "center" },
+                          domProps: { textContent: _vm._s(pelicula.titulo) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          staticStyle: { "text-align": "center" },
+                          domProps: { textContent: _vm._s(pelicula.director) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          staticStyle: { "text-align": "center" },
+                          domProps: { textContent: _vm._s(pelicula.duracion) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          staticStyle: { "text-align": "center" },
+                          domProps: {
+                            textContent: _vm._s(pelicula.anio_estreno)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          staticStyle: { "text-align": "center" },
+                          domProps: { textContent: _vm._s(pelicula.categoria) }
+                        }),
+                        _vm._v(" "),
+                        _vm.logueado.idrol == 1
+                          ? [
+                              _c("td", {
+                                staticStyle: { "text-align": "center" },
+                                domProps: {
+                                  textContent: _vm._s(pelicula.multa_diaria)
+                                }
+                              })
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("td", { staticStyle: { "text-align": "center" } }, [
+                          pelicula.condicion
+                            ? _c("div", [
+                                _c(
+                                  "span",
+                                  { staticClass: "badge badge-success" },
+                                  [_vm._v("DISPONIBLE")]
+                                )
+                              ])
+                            : _c("div", [
+                                _c(
+                                  "span",
+                                  { staticClass: "badge badge-danger" },
+                                  [_vm._v("NO DISPONIBLE")]
+                                )
+                              ])
+                        ])
+                      ],
+                      2
+                    )
+                  }),
+                  0
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("nav", [
+              _c(
+                "ul",
+                { staticClass: "pagination" },
+                [
+                  _vm.pagination.current_page > 1
+                    ? _c("li", { staticClass: "page-item" }, [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "page-link",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.cambiarPagina(
+                                  _vm.pagination.current_page - 1,
+                                  _vm.buscar,
+                                  _vm.criterio,
+                                  _vm.select_categoria
+                                )
+                              }
+                            }
+                          },
+                          [_vm._v("Ant")]
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm._l(_vm.pagesNumber, function(page) {
+                    return _c(
+                      "li",
+                      {
+                        key: page,
+                        staticClass: "page-item",
+                        class: [page == _vm.isActived ? "active" : ""]
+                      },
+                      [
+                        _c("a", {
                           staticClass: "page-link",
                           attrs: { href: "#" },
+                          domProps: { textContent: _vm._s(page) },
                           on: {
                             click: function($event) {
                               $event.preventDefault()
                               return _vm.cambiarPagina(
-                                _vm.pagination.current_page + 1,
+                                page,
                                 _vm.buscar,
-                                _vm.criterio
+                                _vm.criterio,
+                                _vm.select_categoria
                               )
                             }
                           }
-                        },
-                        [_vm._v("Sig")]
-                      )
-                    ])
-                  : _vm._e()
-              ],
-              2
-            )
-          ])
-        ])
+                        })
+                      ]
+                    )
+                  }),
+                  _vm._v(" "),
+                  _vm.pagination.current_page < _vm.pagination.last_page
+                    ? _c("li", { staticClass: "page-item" }, [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "page-link",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.cambiarPagina(
+                                  _vm.pagination.current_page + 1,
+                                  _vm.buscar,
+                                  _vm.criterio,
+                                  _vm.select_categoria
+                                )
+                              }
+                            }
+                          },
+                          [_vm._v("Sig")]
+                        )
+                      ])
+                    : _vm._e()
+                ],
+                2
+              )
+            ])
+          ],
+          2
+        )
       ])
     ])
   ])
@@ -41843,46 +42215,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { staticStyle: { "text-align": "center" } }, [
-          _vm._v("OPCIONES")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { "text-align": "center" } }, [
-          _vm._v("TITULO")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { "text-align": "center" } }, [
-          _vm._v("DIRECTOR")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { "text-align": "center" } }, [
-          _vm._v("DURACION")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { "text-align": "center" } }, [
-          _vm._v("ANIO ESTRENO")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { "text-align": "center" } }, [
-          _vm._v("CATEGORIA")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { "text-align": "center" } }, [
-          _vm._v("MULTA DIARIA")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { "text-align": "center" } }, [
-          _vm._v("ESTADO")
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c(
       "button",
       {
@@ -41890,32 +42222,6 @@ var staticRenderFns = [
         attrs: { type: "button", title: "EDITAR PELICULA" }
       },
       [_c("i", { staticClass: "icon-pencil" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn btn-danger btn-sm",
-        attrs: { type: "button", title: "DESACTIVAR PELICULA" }
-      },
-      [_c("i", { staticClass: "icon-trash" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn btn-info btn-sm",
-        attrs: { type: "button", title: "ACTIVAR PELICULA" }
-      },
-      [_c("i", { staticClass: "icon-check" })]
     )
   }
 ]

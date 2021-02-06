@@ -26,10 +26,33 @@
                                       <option value="director">DIRECTOR</option>
                                       <option value="anio_estreno">ANIO ESTRENO</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup="listarPelicula(1, buscar, criterio)" class="form-control" placeholder="TEXTO A BUSCAR">
+                                    <input type="text" v-model="buscar" @keyup="listarPelicula(1, buscar, criterio, select_categoria, select_condicion)" class="form-control" placeholder="TEXTO A BUSCAR">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group input-daterange">
+                                    <div class="input-group-addon bg-primary">CATEGORIA</div>
+                                    <select class="form-control col-md-8" v-model="select_categoria" @change="listarPelicula(1, buscar, criterio, select_categoria, select_condicion)">
+                                        <option value="">TODOS</option>
+                                        <option v-for="nombreCategoria in arrayCategoria" :key="nombreCategoria.id" :value="nombreCategoria.id" v-text="nombreCategoria.nombre"></option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
+                        <template v-if="logueado.idrol == 1">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <div class="input-group input-daterange">
+                                        <div class="input-group-addon bg-primary">CONDICION</div>
+                                        <select class="form-control col-md-8" v-model="select_condicion" @change="listarPelicula(1, buscar, criterio, select_categoria, select_condicion)">
+                                            <option value="">TODOS</option>
+                                            <option value="1">DISPONIBILIDAD</option>
+                                            <option value="0">INDISPONIBILIDAD</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
@@ -39,33 +62,39 @@
                                     <th style="text-align: center;">DURACION</th>
                                     <th style="text-align: center;">ANIO ESTRENO</th>
                                     <th style="text-align: center;">CATEGORIA</th>
-                                    <th style="text-align: center;">MULTA DIARIA</th>
+                                    <template v-if="logueado.idrol==1">
+                                        <th style="text-align: center;">MULTA DIARIA</th>
+                                    </template>
                                     <th style="text-align: center;">ESTADO</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="pelicula in arrayPelicula" :key="pelicula.id">
-                                    <td style="text-align: center;">                                        
-                                        <template v-if="pelicula.condicion">
+                                    <td style="text-align: center;">  
+                                        <template v-if="logueado.idrol==1">
                                             <button type="button" class="btn btn-warning btn-sm" title="EDITAR PELICULA">
                                                 <i class="icon-pencil"></i>
                                             </button> &nbsp;
-                                            <button type="button" class="btn btn-danger btn-sm" title="DESACTIVAR PELICULA">
-                                                <i class="icon-trash"></i>
-                                            </button>
-                                        </template>
-                                        <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" title="ACTIVAR PELICULA">
-                                                <i class="icon-check"></i>
-                                            </button>
-                                        </template>
+                                            <template v-if="pelicula.condicion">
+                                                <button type="button" @click="desactivarPelicula(pelicula.id)" class="btn btn-danger btn-sm" title="DESACTIVAR PELICULA">
+                                                    <i class="icon-trash"></i>
+                                                </button>
+                                            </template>
+                                            <template v-else>
+                                                <button type="button" @click="activarPelicula(pelicula.id)" class="btn btn-info btn-sm" title="ACTIVAR PELICULA">
+                                                    <i class="icon-check"></i>
+                                                </button>
+                                            </template>
+                                        </template>                                      
                                     </td>
                                     <td style="text-align: center;" v-text="pelicula.titulo"></td>
                                     <td style="text-align: center;" v-text="pelicula.director"></td>
                                     <td style="text-align: center;" v-text="pelicula.duracion"></td>
                                     <td style="text-align: center;" v-text="pelicula.anio_estreno"></td>
                                     <td style="text-align: center;" v-text="pelicula.categoria"></td>
-                                    <td style="text-align: center;" v-text="pelicula.multa_diaria"></td>
+                                    <template v-if="logueado.idrol==1">
+                                        <td style="text-align: center;" v-text="pelicula.multa_diaria"></td>
+                                    </template>
                                     <td style="text-align: center;">
                                         <div v-if="pelicula.condicion">
                                             <span class="badge badge-success">DISPONIBLE</span>
@@ -80,13 +109,13 @@
                         <nav>
                             <ul class="pagination">
                                 <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio, select_categoria)">Ant</a>
                                 </li>
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio, select_categoria)" v-text="page"></a>
                                 </li>
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio, select_categoria)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -128,7 +157,9 @@
                 offset : 3,
                 criterio : 'titulo',
                 buscar : '',
-                logueado : 0
+                logueado : 0,
+                select_categoria : '',
+                select_condicion : ''
             }
 
         },
@@ -167,10 +198,10 @@
 
         methods : {
 
-            listarPelicula(page, buscar, criterio){
+            listarPelicula(page, buscar, criterio, select_categoria, select_condicion){
 
                 let me = this;
-                var url = '/peliculas?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+                var url = '/peliculas?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio + '&select_categoria=' + select_categoria + '&select_condicion=' + select_condicion;
                 
                 axios.get(url).then(function (response) {
                     var respuesta = response.data;
@@ -186,19 +217,121 @@
 
             },
 
-            cambiarPagina(page, buscar, criterio){
+            cambiarPagina(page, buscar, criterio, select_categoria, select_condicion){
                 
                 let me = this;
                 me.pagination.current_page = page;
-                me.listarPelicula(page, buscar, criterio);
+                me.listarPelicula(page, buscar, criterio, select_categoria, select_condicion);
 
-            }
+            },
+
+            desactivarPelicula(id){
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                    })
+                    swalWithBootstrapButtons.fire({
+                    
+                        title: 'ESTÁ SEGURO DE DESACTIVAR A ESTA PELICULA?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'SÍ, DESACTÍVALA!',
+                        cancelButtonText: 'NO, CANCELAR!',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.value) {
+                            let me = this;
+                            axios.put('/peliculas/desactivar', {
+                                'id': id
+                            }).then(function (response) {
+                                me.listarPelicula(1, this.buscar, this.criterio, this.select_categoria, this.select_condicion);
+                                swalWithBootstrapButtons.fire(
+                                    'DESACTIVADO!',
+                                    'LA PELICULA HA SIDO DESACTIVADO.',
+                                    'success'
+                                )
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+                            
+                        } else if (
+                            /* Read more about handling dismissals below */
+                            result.dismiss === Swal.DismissReason.cancel
+                        ) {
+                            
+                        }
+                });
+            },
+
+            activarPelicula(id){
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                    })
+                    swalWithBootstrapButtons.fire({
+                    
+                        title: 'ESTÁ SEGURO DE ACTIVAR A ESTA PELICULA?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'SÍ, ACTÍVALO!',
+                        cancelButtonText: 'NO, CANCELAR!',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.value) {
+                            let me = this;
+                            axios.put('/peliculas/activar', {
+                                'id': id
+                            }).then(function (response) {
+                                me.listarPelicula(1, this.buscar, this.criterio, this.select_categoria, this.select_condicion);
+                                swalWithBootstrapButtons.fire(
+                                    'ACTIVADO!',
+                                    'LA PELICULA HA SIDO ACTIVADO.',
+                                    'success'
+                                )
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+                            
+                        } else if (
+                            /* Read more about handling dismissals below */
+                            result.dismiss === Swal.DismissReason.cancel
+                        ) {
+                            
+                        }
+                });
+            },
+
+            selectCategoria(){
+
+                let me = this;
+                var url = '/categorias/selectCategoria';
+                
+                axios.get(url).then(function (response) {
+                    var respuesta = response.data;
+                    me.arrayCategoria = respuesta.categorias;
+                    console.log(response);
+
+                })
+                .catch(function (error) {
+                    
+                    console.log(error);
+
+                })
+
+            },
 
         },
 
         mounted() {
 
-            this.listarPelicula(1, this.buscar, this.criterio);
+            this.listarPelicula(1, this.buscar, this.criterio, this.select_categoria, this.select_condicion);
+            this.selectCategoria();
 
         }
     }

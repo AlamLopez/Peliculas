@@ -55,7 +55,7 @@ class CategoriaController extends Controller
          * Devuelve los roles registrados con condicion Activo
          */
 
-        $roles = Categoria::where('condicion', true)->select('id', 'nombre')->orderBy('nombre', 'asc')->get();
+        $categorias = Categoria::where('condicion', true)->select('id', 'nombre')->orderBy('nombre', 'asc')->get();
 
         return ['categorias' => $categorias];
         

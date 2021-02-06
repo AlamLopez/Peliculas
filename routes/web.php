@@ -27,7 +27,7 @@ Route::get('/roles', 'RolController@index');
 Route::get('/roles/selectRol', 'RolController@selectRol');
 
 Route::get('/categorias', 'CategoriaController@index');
-Route::get('/categorias/selectCategoria', 'CategoriaController@selectRol');
+Route::get('/categorias/selectCategoria', 'CategoriaController@selectCategoria');
 
 Route::get('/peliculas', 'PeliculaController@index');
 Route::get('/peliculas/unico/{pelicula}', 'PeliculaController@unico');
