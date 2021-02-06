@@ -25,6 +25,11 @@
                                     <button type="submit" @click="listarMovimiento(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> BUSCAR</button>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <button type="button" @click="exportarPDF()" class="btn btn-warning text-white" title="EXPORTAR MOVIMIENTOS">
+                                    <i class="fa fa-file-pdf-o"></i>&nbsp;PDF
+                                </button>
+                            </div>
                         </div>
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
@@ -65,6 +70,9 @@
 </template>
 
 <script>
+
+    import FileSaver from 'file-saver';
+
     export default {
 
         data (){
@@ -147,7 +155,30 @@
                 me.pagination.current_page = page;
                 me.listarMovimiento(page, buscar, criterio);
 
-            }
+            },
+
+            exportarPDF(){
+                
+                let me = this;
+                
+                me.loading = true;
+                axios.post('/reporteria/movimientos', {
+                    'data' : me.arrayMovimiento
+                }).then(function (response) {
+                    me.loading = false;
+                    axios.get('/reporteria/movimientos-descargar', {
+                        responseType: "blob"
+                    }).then((response) => {
+                        
+                        console.log(response.data);
+                        FileSaver.saveAs(response.data, 'movimientos.pdf');
+                        
+                    });
+                    console.response(response);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
             
         },
 

@@ -55,4 +55,9 @@ Route::put('/peliculas/actualizar', 'PeliculaController@update');
 Route::put('/peliculas/desactivar', 'PeliculaController@desactivar');
 Route::put('/peliculas/activar', 'PeliculaController@activar');
 
-
+Route::get('/reporteria/movimientos-descargar', 'ReporteriaController@movimientoDescargar');
+Route::post('/reporteria/movimientos', 'ReporteriaController@movimiento');
+Route::get('/reporteria/usuarios-descargar', 'ReporteriaController@usuarioDescargar');
+Route::post('/reporteria/usuarios', 'ReporteriaController@usuario');
+Route::get('/reporteria/peliculas-descargar', 'ReporteriaController@peliculaDescargar');
+Route::post('/reporteria/peliculas', 'ReporteriaController@pelicula');

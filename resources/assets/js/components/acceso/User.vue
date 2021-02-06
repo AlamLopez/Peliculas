@@ -15,6 +15,9 @@
                             <button type="button" @click="abrirModal('usuario', 'registrar')" class="btn btn-secondary">
                                 <i class="icon-plus"></i>&nbsp;NUEVO
                             </button>
+                            <button type="button" @click="exportarPDF()" class="btn btn-warning text-white" title="EXPORTAR USUARIOS CLIENTES">
+                                <i class="fa fa-file-pdf-o"></i>&nbsp;PDF
+                            </button>
                         </template>
                     </div>
                     <div class="card-body">
@@ -176,6 +179,9 @@
 </template>
 
 <script>
+
+    import FileSaver from 'file-saver';
+
     export default {
 
         data (){
@@ -188,6 +194,7 @@
                 password : '',
                 idrol: 0,
                 arrayUsuario : [],
+                arrayUsuarioCliente : [],
                 arrayRol : [],
                 modal : 0,
                 tituloModal : '',
@@ -247,6 +254,7 @@
                 axios.get(url).then(function (response) {
                     var respuesta = response.data;
                     me.arrayUsuario = respuesta.usuarios.data;
+                    me.arrayUsuarioCliente = respuesta.usuariosclientes.data;
                     me.logueado = respuesta.logueado;
                     me.pagination = respuesta.pagination;
                     console.log(response);
@@ -556,7 +564,41 @@
                 this.password = '';
                 this.errorUsuario = 0;
                 this.errorMostrarMsjUsuario = [];
-            }
+            },
+
+            exportarPDF(){
+                
+                let me = this;
+                
+                me.loading = true;
+
+                axios.post('/reporteria/usuarios', {
+                    
+                    'data' : me.arrayUsuarioCliente
+
+                }).then(function (response) {
+                    
+                    me.loading = false;
+
+                    axios.get('/reporteria/usuarios-descargar', {
+                        
+                        responseType: "blob"
+
+                    }).then((response) => {
+                        
+                        console.log(response.data);
+                        FileSaver.saveAs(response.data, 'usuarios-clientes.pdf');
+                        
+                    });
+
+                    console.response(response);
+
+                }).catch(function (error) {
+                    
+                    console.log(error);
+                    
+                });
+            },
 
         },
 

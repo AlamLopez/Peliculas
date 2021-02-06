@@ -15,6 +15,9 @@
                             <button type="button" @click="abrirModal('pelicula', 'registrar')" class="btn btn-secondary">
                                 <i class="icon-plus"></i>&nbsp;NUEVO
                             </button>
+                            <button type="button" @click="exportarPDF()" class="btn btn-warning text-white" title="EXPORTAR PELICULAS">
+                                <i class="fa fa-file-pdf-o"></i>&nbsp;PDF
+                            </button>
                         </template>
                     </div>
                     <div class="card-body">
@@ -200,6 +203,9 @@
 </template>
 
 <script>
+
+    import FileSaver from 'file-saver';
+
     export default {
 
         data (){
@@ -556,7 +562,41 @@
                 this.errorPelicula = 0;
                 this.errorMostrarMsjPelicula = [];
 
-            }
+            },
+
+            exportarPDF(){
+                
+                let me = this;
+                
+                me.loading = true;
+
+                axios.post('/reporteria/peliculas', {
+                    
+                    'data' : me.arrayPelicula
+
+                }).then(function (response) {
+                    
+                    me.loading = false;
+
+                    axios.get('/reporteria/peliculas-descargar', {
+                        
+                        responseType: "blob"
+
+                    }).then((response) => {
+                        
+                        console.log(response.data);
+                        FileSaver.saveAs(response.data, 'pelicula-categoria.pdf');
+                        
+                    });
+
+                    console.response(response);
+
+                }).catch(function (error) {
+                    
+                    console.log(error);
+                    
+                });
+            },
 
         },
 

@@ -39,6 +39,11 @@ class UserController extends Controller
 
         }
 
+        $user_cliente = User::select('users.id', 'users.usuario', 'users.nombrecompleto', 'users.email', 'users.password', 'users.condicion', 'users.idrol', 'roles.nombre as rol')
+                            ->join('roles', 'roles.id', '=', 'users.idrol')
+                            ->where('users.idrol', 3)
+                            ->orderBy('users.nombrecompleto', 'asc')
+                            ->paginate(2);
         return [
             
             'pagination' => [
@@ -51,6 +56,8 @@ class UserController extends Controller
             ],
 
             'usuarios' => $users,
+
+            'usuariosclientes' => $user_cliente,
 
             'logueado' => $logueado
 
