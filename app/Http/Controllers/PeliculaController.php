@@ -26,8 +26,6 @@ class PeliculaController extends Controller
 
         $logueado = Auth::user();
 
-        //dd($request->all());
-
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $select_categoria = $request->select_categoria;

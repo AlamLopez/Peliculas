@@ -316,10 +316,10 @@
 
                 swalWithBootstrapButtons.fire({
                 
-                    title: 'ESTÁ SEGURO DE DESACTIVAR A ESTA PELICULA?',
+                    title: 'ESTÁ SEGURO ALQUILAR ESTA PELICULA?',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'SÍ, DESACTÍVALA!',
+                    confirmButtonText: 'SÍ, LA QUIERO!',
                     cancelButtonText: 'NO, CANCELAR!',
                     reverseButtons: true
                 }).then((result) => {
@@ -331,7 +331,7 @@
                             me.listarPelicula(1, me.buscar, me.criterio, me.select_categoria, me.select_condicion);
                             swalWithBootstrapButtons.fire(
                                 'DESACTIVADO!',
-                                'LA PELICULA HA SIDO DESACTIVADO.',
+                                'LA PELICULA HA SIDO ALQUILADO.',
                                 'success'
                             )
                         }).catch(function (error) {
@@ -361,10 +361,10 @@
 
                 swalWithBootstrapButtons.fire({
                 
-                    title: 'ESTÁ SEGURO DE ALQUILAR A ESTA PELICULA?',
+                    title: 'ESTÁ SEGURO DE DEVOLVER ESTA PELICULA?',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'SÍ, ACTÍVALO!',
+                    confirmButtonText: 'SÍ, YA LA VI!',
                     cancelButtonText: 'NO, CANCELAR!',
                     reverseButtons: true
 
@@ -380,7 +380,7 @@
                             me.listarPelicula(1, me.buscar, me.criterio, me.select_categoria, me.select_condicion);
                             swalWithBootstrapButtons.fire(
                                 'ACTIVADO!',
-                                'LA PELICULA HA SIDO ACTIVADO.',
+                                'LA PELICULA HA SIDO DEVUELTA.',
                                 'success'
                             )
                         }).catch(function (error) {

@@ -1,4 +1,4 @@
 <footer class="app-footer">
-    <span><a href="http://www.incanatoit.com/">IncanatoIT</a> &copy; 2017</span>
-    <span class="ml-auto">Desarrollado por <a href="http://www.incanatoit.com/">IncanatoIT</a></span>
+    <span><a href="http://murmuring-garden-93319.herokuapp.com/">Alam Lopez Heroku</a> &copy; 2021</span>
+    <span class="ml-auto">Desarrollado por <a href="https://github.com/AlamLopez/Peliculas.git">ALAM LOPEZ</a></span>
 </footer>
